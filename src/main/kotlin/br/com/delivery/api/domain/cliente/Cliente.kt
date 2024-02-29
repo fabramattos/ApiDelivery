@@ -16,14 +16,22 @@ class Cliente(
     var senha: String,
 
     @OneToMany(mappedBy = "cliente", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var pedidos: MutableList<Pedido>?
+    var pedidos: MutableList<Pedido>?,
 ) {
 
     constructor(form: ClienteFormNovo) :
-        this(nome = form.nome,
-            login = form.login,
-            senha = form.senha,
-            pedidos = mutableListOf()
-        )
+            this(
+                nome = form.nome,
+                login = form.login,
+                senha = form.senha,
+                pedidos = mutableListOf()
+            )
+
+    fun atualiza(form: ClienteFormAtualiza): Cliente {
+        form.nome?.let { nome = it }
+        form.login?.let { login = it }
+        form.senha?.let { senha = it }
+        return this
+    }
 
 }

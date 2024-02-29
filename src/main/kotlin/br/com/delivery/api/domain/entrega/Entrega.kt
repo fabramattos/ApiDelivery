@@ -1,4 +1,4 @@
-package br.com.delivery.api.br.com.delivery.api.domain.entrega
+package br.com.delivery.api.domain.entrega
 
 import br.com.delivery.api.domain.pedido.Pedido
 import jakarta.persistence.Column
