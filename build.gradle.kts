@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "br.com.delivery.api"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_19
@@ -23,6 +23,7 @@ dependencies {
     //Database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("com.h2database:h2") // para inicio de projeto
 
     //Web
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -32,6 +33,12 @@ dependencies {
     //Validation
     implementation("org.springframework.boot:spring-boo1t-starter-validation")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
+
+    //Security
+    implementation("com.auth0:java-jwt:4.4.0")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 
     //Container
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
