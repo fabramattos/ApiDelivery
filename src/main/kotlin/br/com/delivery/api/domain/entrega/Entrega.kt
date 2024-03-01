@@ -1,13 +1,7 @@
 package br.com.delivery.api.domain.entrega
 
 import br.com.delivery.api.domain.pedido.Pedido
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToOne
+import jakarta.persistence.*
 
 @Entity
 class Entrega(
@@ -24,6 +18,12 @@ class Entrega(
 
 
 ) {
+    fun atualiza(form: EntregaFormAtualiza): Entrega {
+        endereco = form.endereco
+        return this
+    }
+
+
     constructor(pedido: Pedido, form: EntregaFormNovo) :
             this(pedido = pedido, endereco = form.endereco)
 }

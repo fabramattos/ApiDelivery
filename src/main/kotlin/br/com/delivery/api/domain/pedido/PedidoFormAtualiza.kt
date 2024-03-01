@@ -1,4 +1,4 @@
-package br.com.delivery.api.br.com.delivery.api.domain.pedido
+package br.com.delivery.api.domain.pedido
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull

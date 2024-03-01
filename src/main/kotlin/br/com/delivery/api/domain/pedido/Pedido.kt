@@ -1,6 +1,5 @@
 package br.com.delivery.api.domain.pedido
 
-import br.com.delivery.api.br.com.delivery.api.domain.pedido.PedidoFormAtualiza
 import br.com.delivery.api.domain.cliente.Cliente
 import br.com.delivery.api.domain.entrega.Entrega
 import jakarta.persistence.*
