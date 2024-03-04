@@ -1,3 +1,3 @@
 package br.com.delivery.api.infra.exception
 
-class TokenGeradoException : RuntimeException()
+class TokenGeradoException: RuntimeException("Erro ao gerar Token!")

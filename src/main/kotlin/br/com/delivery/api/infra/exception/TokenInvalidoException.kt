@@ -1,5 +1,3 @@
 package br.com.delivery.api.infra.exception
 
-class TokenInvalidoException : RuntimeException() {
-
-}
+class TokenInvalidoException : RuntimeException("Token inválido!")

@@ -1,5 +1,5 @@
 package br.com.delivery.api.infra.exception
 
-class ClienteNaoEncontradoException : RuntimeException() {
+class ClienteNaoEncontradoException  : RuntimeException("Cliente não encontrado!")
 
-}
+
