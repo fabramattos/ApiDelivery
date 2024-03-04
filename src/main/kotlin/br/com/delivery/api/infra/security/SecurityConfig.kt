@@ -20,6 +20,7 @@ class SecurityConfig(val tokenFilter: TokenFilter) {
     protected fun filterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .csrf { it.disable() }
+            .headers{it.disable()}
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
                 it.anyRequest().permitAll()

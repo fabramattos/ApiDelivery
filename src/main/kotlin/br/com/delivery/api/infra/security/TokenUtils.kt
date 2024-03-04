@@ -1,9 +1,8 @@
 package br.com.delivery.api.infra.security
 
-import br.com.delivery.api.br.com.delivery.api.infra.exception.TokenGeradoException
-import br.com.delivery.api.br.com.delivery.api.infra.exception.TokenInvalidoException
-import br.com.delivery.api.br.com.delivery.api.infra.exception.TokenNaoInformadoException
 import br.com.delivery.api.domain.cliente.Cliente
+import br.com.delivery.api.infra.exception.TokenGeradoException
+import br.com.delivery.api.infra.exception.TokenInvalidoException
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import jakarta.servlet.http.HttpServletRequest
@@ -13,14 +12,14 @@ import java.time.Duration
 import java.time.Instant
 
 @Component
-class TokenUtils {
+class TokenUtils(
 
     @Value("\${jwt.secret}")
-    private val JWT_SECRET: String? = null
-    private val algoritmo = Algorithm.HMAC512(JWT_SECRET)
-    private val ISSUER = "acert_api"
-    private val DIAS_VALIDADE = 1L
-
+    private val JWT_SECRET: String,
+    private val algoritmo: Algorithm = Algorithm.HMAC512(JWT_SECRET),
+    private val ISSUER: String = "acert_api",
+    private val DIAS_VALIDADE: Long = 1L,
+){
     fun geraToken(cliente: Cliente) = JWT
         .create()
         .withIssuer(ISSUER)
@@ -56,6 +55,5 @@ class TokenUtils {
         req
             .getHeader("Authorization")
             ?.replace("Bearer ", "")
-            ?: throw TokenNaoInformadoException()
 
 }
