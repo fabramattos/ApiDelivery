@@ -14,10 +14,10 @@ class Pedido(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")
-    @Column(nullable = false)
     var cliente: Cliente,
 
     @OneToOne(mappedBy = "pedido", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "entrega_id")
     var entrega: Entrega? = null,
 ) {
     fun atualiza(form: PedidoFormAtualiza): Pedido {

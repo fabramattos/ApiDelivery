@@ -11,11 +11,12 @@ class Entrega(
     @Column(nullable = false)
     var endereco: String,
 
-    @OneToOne(mappedBy = "entrega")
+    @OneToOne
     @JoinColumn(name = "pedido_id")
-    @Column(nullable = false)
-    var pedido: Pedido
+    var pedido: Pedido,
 
+    @Enumerated(EnumType.STRING)
+    var status: EntregaStatus = EntregaStatus.NAO_INICIADA
 
 ) {
     fun atualiza(form: EntregaFormAtualiza): Entrega {
