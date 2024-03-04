@@ -3,7 +3,7 @@ package br.com.delivery.api.service
 import br.com.delivery.api.domain.entrega.Entrega
 import br.com.delivery.api.domain.entrega.EntregaFormAtualiza
 import br.com.delivery.api.domain.entrega.EntregaFormNovo
-import br.com.delivery.api.domain.entrega.EntregaRepostory
+import br.com.delivery.api.domain.entrega.EntregaRepository
 import br.com.delivery.api.infra.exception.EntregaNaoEncontradaException
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class EntregaService(
-    private val repository: EntregaRepostory,
+    private val repository: EntregaRepository,
     private val pedidoService: PedidoService,
 ) {
 
