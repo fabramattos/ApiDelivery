@@ -22,7 +22,7 @@ repositories {
 dependencies {
     //Database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    runtimeOnly("org.postgresql:postgresql")
+//    runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("com.h2database:h2") // para inicio de projeto
 
     //Web
@@ -31,7 +31,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     //Validation
-    implementation("org.springframework.boot:spring-boo1t-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
 
     //Security
@@ -41,10 +41,10 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
 
     //Container
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-    testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:postgresql")
-    testImplementation("org.testcontainers:junit-jupiter")
+    //developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+    //testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    //testImplementation("org.testcontainers:postgresql")
+    //testImplementation("org.testcontainers:junit-jupiter")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
