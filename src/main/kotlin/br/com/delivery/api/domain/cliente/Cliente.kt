@@ -2,6 +2,7 @@ package br.com.delivery.api.domain.cliente
 
 import br.com.delivery.api.domain.pedido.Pedido
 import jakarta.persistence.*
+import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
 class Cliente(
@@ -17,7 +18,7 @@ class Cliente(
 
     @OneToMany(mappedBy = "cliente", cascade = [CascadeType.ALL], orphanRemoval = true)
     val pedidos: MutableList<Pedido> = mutableListOf(),
-) {
+) : UserDetails {
 
     constructor(form: ClienteFormNovo) :
             this(
@@ -32,5 +33,20 @@ class Cliente(
         form.senha?.let { senha = it }
         return this
     }
+
+    override fun getAuthorities() = null
+
+
+    override fun getPassword() = senha
+
+    override fun getUsername()  = login
+
+    override fun isAccountNonExpired() = true
+
+    override fun isAccountNonLocked() = true
+
+    override fun isCredentialsNonExpired() = true
+
+    override fun isEnabled() = true
 
 }

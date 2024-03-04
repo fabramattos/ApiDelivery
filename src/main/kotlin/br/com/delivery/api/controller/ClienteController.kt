@@ -7,6 +7,7 @@ import br.com.delivery.api.infra.security.TokenUtils
 import br.com.delivery.api.service.ClienteService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriComponentsBuilder
@@ -17,7 +18,8 @@ import org.springframework.web.util.UriComponentsBuilder
 class ClienteController (private val service: ClienteService, private val tokenUtils: TokenUtils){
 
     @PostMapping
-    fun cria(@Valid @RequestBody form: ClienteFormNovo, uriBuilder: UriComponentsBuilder) : ResponseEntity<ClienteViewSimples>{
+    @ResponseStatus(HttpStatus.CREATED)
+    fun criar(@Valid @RequestBody form: ClienteFormNovo, uriBuilder: UriComponentsBuilder) : ResponseEntity<ClienteViewSimples>{
         val cliente = service.criar(form)
         val uri = uriBuilder
             .path("/cliente/{id}")
@@ -28,10 +30,26 @@ class ClienteController (private val service: ClienteService, private val tokenU
     }
 
     @PutMapping
-    fun edita(@Valid @RequestBody form: ClienteFormAtualiza, req: HttpServletRequest) : ResponseEntity<ClienteViewSimples>{
+    @ResponseStatus(HttpStatus.OK)
+    fun editar(@Valid @RequestBody form: ClienteFormAtualiza, req: HttpServletRequest) : ResponseEntity<ClienteViewSimples>{
         val userId = tokenUtils.getUserId(req)
         val cliente = service.atualizar(userId, form)
         return ResponseEntity.ok(ClienteViewSimples(cliente))
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.FOUND)
+    fun buscar(req: HttpServletRequest) : ResponseEntity<ClienteViewSimples>{
+        val userId = tokenUtils.getUserId(req)
+        val cliente = service.buscar(userId)
+        return ResponseEntity.ok(ClienteViewSimples(cliente))
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deletar(req: HttpServletRequest) : ResponseEntity<Any> {
+        val userId = tokenUtils.getUserId(req)
+        return ResponseEntity.noContent().build()
     }
 
 }
