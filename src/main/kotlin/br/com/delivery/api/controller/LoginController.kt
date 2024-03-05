@@ -4,6 +4,7 @@ import br.com.delivery.api.domain.cliente.Cliente
 import br.com.delivery.api.domain.cliente.ClienteFormLogin
 import br.com.delivery.api.infra.security.TokenUtils
 import jakarta.validation.Valid
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
@@ -13,8 +14,8 @@ import org.springframework.web.util.UriComponentsBuilder
 
 
 @RestController
-@RequestMapping("/cliente")
-class LoginController (private val tokenUtils: TokenUtils, private val manager: AuthenticationManager){
+@RequestMapping("/login")
+class LoginController (private val tokenUtils: TokenUtils, @Autowired private val manager: AuthenticationManager){
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)

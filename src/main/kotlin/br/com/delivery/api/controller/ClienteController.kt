@@ -2,6 +2,7 @@ package br.com.delivery.api.controller
 
 import br.com.delivery.api.domain.cliente.ClienteFormAtualiza
 import br.com.delivery.api.domain.cliente.ClienteFormNovo
+import br.com.delivery.api.domain.cliente.ClienteViewAtualizado
 import br.com.delivery.api.domain.cliente.ClienteViewSimples
 import br.com.delivery.api.infra.security.TokenUtils
 import br.com.delivery.api.service.ClienteService
@@ -31,10 +32,11 @@ class ClienteController (private val service: ClienteService, private val tokenU
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    fun editar(@Valid @RequestBody form: ClienteFormAtualiza, req: HttpServletRequest) : ResponseEntity<ClienteViewSimples>{
+    fun editar(@Valid @RequestBody form: ClienteFormAtualiza, req: HttpServletRequest) : ResponseEntity<ClienteViewAtualizado> {
         val userId = tokenUtils.getUserId(req)
         val cliente = service.atualizar(userId, form)
-        return ResponseEntity.ok(ClienteViewSimples(cliente))
+        val token = tokenUtils.geraToken(cliente)
+        return ResponseEntity.ok(ClienteViewAtualizado(cliente, token))
     }
 
     @GetMapping
@@ -49,6 +51,7 @@ class ClienteController (private val service: ClienteService, private val tokenU
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deletar(req: HttpServletRequest) : ResponseEntity<Any> {
         val userId = tokenUtils.getUserId(req)
+        service.deletar(userId)
         return ResponseEntity.noContent().build()
     }
 

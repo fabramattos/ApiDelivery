@@ -44,6 +44,7 @@ class SecurityConfig(val tokenFilter: TokenFilter) {
     }
 
     @Bean
+    @Throws(Exception::class)
     protected fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {
         return config.authenticationManager
     }
