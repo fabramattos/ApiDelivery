@@ -20,7 +20,8 @@ class Entrega(
 
 ) {
     fun atualiza(form: EntregaFormAtualiza): Entrega {
-        endereco = form.endereco
+        form.endereco?.let{ endereco = it }
+        form.status?.let { status = it }
         return this
     }
 

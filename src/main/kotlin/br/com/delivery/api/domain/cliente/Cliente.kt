@@ -1,6 +1,7 @@
 package br.com.delivery.api.domain.cliente
 
 import br.com.delivery.api.domain.pedido.Pedido
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import org.springframework.security.core.userdetails.UserDetails
 
@@ -17,6 +18,7 @@ class Cliente(
     var senha: String,
 
     @OneToMany(mappedBy = "cliente", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JsonIgnore
     val pedidos: MutableList<Pedido> = mutableListOf(),
 ) : UserDetails {
 

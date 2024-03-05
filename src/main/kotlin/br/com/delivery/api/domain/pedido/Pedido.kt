@@ -2,6 +2,7 @@ package br.com.delivery.api.domain.pedido
 
 import br.com.delivery.api.domain.cliente.Cliente
 import br.com.delivery.api.domain.entrega.Entrega
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 @Entity
@@ -17,6 +18,7 @@ class Pedido(
     var cliente: Cliente,
 
     @OneToOne(mappedBy = "pedido", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JsonIgnore
     @JoinColumn(name = "entrega_id")
     var entrega: Entrega? = null,
 ) {
