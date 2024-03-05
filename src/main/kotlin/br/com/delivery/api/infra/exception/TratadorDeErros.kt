@@ -1,6 +1,5 @@
 package br.com.delivery.api.infra.exception
 
-import br.com.delivery.api.br.com.delivery.api.infra.exception.ExceptionView
 import com.auth0.jwt.exceptions.JWTDecodeException
 import com.auth0.jwt.exceptions.TokenExpiredException
 import org.springframework.http.ResponseEntity

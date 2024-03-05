@@ -1,9 +1,11 @@
 package br.com.delivery.api.service
 
+import br.com.delivery.api.domain.entrega.EntregaStatus
 import br.com.delivery.api.domain.pedido.Pedido
 import br.com.delivery.api.domain.pedido.PedidoFormAtualiza
 import br.com.delivery.api.domain.pedido.PedidoFormNovo
 import br.com.delivery.api.domain.pedido.PedidoRepository
+import br.com.delivery.api.infra.exception.EntregaEmAndamentoException
 import br.com.delivery.api.infra.exception.PedidoNaoEncontradoException
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
@@ -25,25 +27,22 @@ class PedidoService(
 
     @Transactional
     fun atualizar(userId: Long, pedidoId: Long, form: PedidoFormAtualiza) =
-        buscar(userId, pedidoId).atualiza(form)
+        buscar(userId, pedidoId)
+            .takeUnless { it.entrega?.status != EntregaStatus.NAO_INICIADA }
+            ?.atualiza(form)
+            ?: throw EntregaEmAndamentoException()
 
-    fun buscar(userId: Long, pedidoId: Long): Pedido {
-        val pedido = repository
-            .findByIdOrNull(pedidoId)
-            ?: throw PedidoNaoEncontradoException()
-
-        if (pedido.cliente.id != userId)
-            throw PedidoNaoEncontradoException()
-
-        return pedido
-    }
-
+    fun buscar(userId: Long, pedidoId: Long) = repository
+        .findByIdOrNull(pedidoId)
+        ?.takeIf { it.cliente.id == userId }
+        ?: throw PedidoNaoEncontradoException()
 
     @Transactional
     fun deletar(userId: Long, pedidoId: Long) {
         val pedido = buscar(userId, pedidoId)
+            .takeUnless { it.entrega?.status != EntregaStatus.NAO_INICIADA }
+            ?: throw EntregaEmAndamentoException()
+
         repository.delete(pedido)
     }
-
-
 }
