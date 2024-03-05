@@ -7,6 +7,6 @@ import java.util.*
 @Repository
 interface ClienteRepository : JpaRepository<Cliente, Long> {
 
-    fun findByLogin(login: String) : Optional<Cliente>
+    fun findByLogin(login: String?) : Optional<Cliente>
 
 }
