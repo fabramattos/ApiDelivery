@@ -19,7 +19,7 @@ class TokenUtils(
     private val algoritmo: Algorithm = Algorithm.HMAC512(JWT_SECRET),
     private val ISSUER: String = "acert_api",
     private val DIAS_VALIDADE: Long = 1L,
-){
+) {
     fun geraToken(cliente: Cliente) = JWT
         .create()
         .withIssuer(ISSUER)
@@ -29,22 +29,25 @@ class TokenUtils(
         .sign(algoritmo)
         ?: throw TokenGeradoException()
 
-    fun getSubject(token: String?): String = JWT
-        .require(algoritmo)
-        .withIssuer(ISSUER)
-        .build()
-        .verify(token)
-        .subject
-        ?: throw TokenInvalidoException()
+    fun getSubject(token: String?): String = runCatching {
+        JWT
+            .require(algoritmo)
+            .withIssuer(ISSUER)
+            .build()
+            .verify(token)
+            .subject
+    }.getOrElse { throw TokenInvalidoException() }
 
-    fun getUserId(req: HttpServletRequest) = JWT
-        .require(algoritmo)
-        .withIssuer(ISSUER)
-        .build()
-        .verify(recuperaToken(req))
-        .getClaim("userId")
-        .asLong()
-        ?: throw TokenInvalidoException()
+
+    fun getUserId(req: HttpServletRequest): Long = runCatching {
+        JWT
+            .require(algoritmo)
+            .withIssuer(ISSUER)
+            .build()
+            .verify(recuperaToken(req))
+            .getClaim("userId")
+            .asLong()
+    }.getOrElse { throw TokenInvalidoException() }
 
     private fun diasValidade(dias: Long): Instant {
         val duration = Duration.ofDays(dias).toSeconds()
