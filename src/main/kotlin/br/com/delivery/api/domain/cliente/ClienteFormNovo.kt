@@ -10,5 +10,5 @@ data class ClienteFormNovo(
     @field: NotBlank  @field:Email
     val login : String,
     @field:NotBlank
-    val senha : String
+    var senha : String
 )

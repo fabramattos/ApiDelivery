@@ -21,13 +21,22 @@ class ClienteService(
 ) : UserDetailsService {
 
     @Transactional
-    fun criar(form: ClienteFormNovo): Cliente {
-        val formCodificado = form.copy(senha = encoder.encode(form.senha))
-        return repository.save(Cliente(formCodificado))
-    }
+    fun criar(form: ClienteFormNovo) = repository
+        .save(
+            Cliente(
+                form.apply { senha = encoder.encode(senha) }
+            )
+        )
+
 
     @Transactional
-    fun atualizar(userId: Long, form: ClienteFormAtualiza) = buscar(userId).atualiza(form)
+    fun atualizar(userId: Long, form: ClienteFormAtualiza) = buscar(userId)
+        .atualiza(form
+            .apply {
+                senha?.apply { senha  = encoder.encode(senha) }
+            }
+        )
+
 
     fun buscar(userId: Long) = repository
         .findByIdOrNull(userId)

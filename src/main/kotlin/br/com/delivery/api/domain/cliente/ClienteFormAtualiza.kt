@@ -6,5 +6,5 @@ data class ClienteFormAtualiza(
     val nome: String?,
     @field: Email
     val login: String?,
-    val senha: String?,
+    var senha: String?,
 )
