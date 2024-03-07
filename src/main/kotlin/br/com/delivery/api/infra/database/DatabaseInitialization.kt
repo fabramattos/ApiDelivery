@@ -10,6 +10,7 @@ import br.com.delivery.api.service.ClienteService
 import br.com.delivery.api.service.EntregaService
 import br.com.delivery.api.service.PedidoService
 import jakarta.annotation.PostConstruct
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
@@ -20,12 +21,16 @@ class DatabaseInitialization(
     private var clienteService: ClienteService,
     private var pedidoService: PedidoService,
     private var entregaService: EntregaService,
+    @Value("\${spring.datasource.init:true}")
+    private var databaseInit: Boolean
 ) {
 
     @PostConstruct
     fun inicializaDatabase() {
-        removeDados()
-        criaUsuarioComEntrega()
+        if(databaseInit) {
+            removeDados()
+            criaUsuarioComEntrega()
+        }
     }
 
     private fun removeDados() {
