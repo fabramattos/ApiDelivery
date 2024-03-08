@@ -28,7 +28,7 @@ class PedidoService(
     @Transactional
     fun atualizar(userId: Long, pedidoId: Long, form: PedidoFormAtualiza) =
         buscar(userId, pedidoId)
-            .takeUnless { it.entrega?.status != EntregaStatus.NAO_INICIADA }
+            .takeUnless { it.entrega != null && it.entrega?.status != EntregaStatus.NAO_INICIADA }
             ?.atualiza(form)
             ?: throw EntregaEmAndamentoException()
 
