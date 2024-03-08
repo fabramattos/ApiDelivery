@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 
 @ActiveProfiles("test")
@@ -50,7 +49,6 @@ class ClienteServiceTestIntegration(
 
         val clienteBuscado = clienteRepository.findAll().first()
 
-        assertTrue(clienteRepository.count() == 1L)
         assertEquals(cliente, clienteBuscado)
         assertEquals(clienteFormNovo.nome, clienteBuscado.nome)
         assertEquals(clienteFormNovo.login, clienteBuscado.login)
@@ -64,10 +62,10 @@ class ClienteServiceTestIntegration(
 
         val cliente = clienteService.criar(clienteFormNovo)
         val clienteAtualizado = clienteService.atualizar(cliente.id!!, clienteFormAtualiza)
+        assertEquals(1, clienteRepository.count())
 
         val clienteBuscado = clienteRepository.findAll().first()
 
-        assertTrue(clienteRepository.count() == 1L)
         assertEquals(cliente, clienteAtualizado)
         assertEquals(clienteAtualizado, clienteBuscado)
         assertEquals(clienteFormAtualiza.nome, clienteBuscado.nome)
@@ -82,10 +80,10 @@ class ClienteServiceTestIntegration(
 
         val cliente = clienteService.criar(clienteFormNovo)
         val clienteAtualizado = clienteService.atualizar(cliente.id!!, ClienteFormAtualiza(null, null, null))
+        assertEquals(1, clienteRepository.count())
 
         val clienteBuscado = clienteRepository.findAll().first()
 
-        assertTrue(clienteRepository.count() == 1L)
         assertEquals(cliente, clienteAtualizado)
         assertEquals(clienteAtualizado, clienteBuscado)
         assertEquals(clienteFormNovo.nome, clienteBuscado.nome)
