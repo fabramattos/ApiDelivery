@@ -34,12 +34,12 @@ class EntregaService(
         ?: throw EntregaNaoEncontradaException()
 
     @Transactional
-    fun deletar(userId: Long, entregaId: Long) =
-        buscar(userId, entregaId)
-            .takeUnless { it.status != EntregaStatus.NAO_INICIADA }
-            ?.let {
-                it.pedido.entrega = null
-                repository.delete(it)
-            }
+    fun deletar(userId: Long, entregaId: Long) {
+        val entrega = buscar(userId, entregaId)
+            .takeIf { it.status == EntregaStatus.NAO_INICIADA }
+            ?.apply { pedido.entrega = null }
             ?: throw EntregaEmAndamentoException()
+
+        repository.delete(entrega)
+    }
 }

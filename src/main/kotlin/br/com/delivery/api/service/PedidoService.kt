@@ -40,7 +40,8 @@ class PedidoService(
     @Transactional
     fun deletar(userId: Long, pedidoId: Long) {
         val pedido = buscar(userId, pedidoId)
-            .takeUnless { it.entrega?.status != EntregaStatus.NAO_INICIADA }
+            .takeIf { it.entrega == null || it.entrega?.status == EntregaStatus.NAO_INICIADA }
+            ?.apply { cliente.pedidos.remove(this) }
             ?: throw EntregaEmAndamentoException()
 
         repository.delete(pedido)

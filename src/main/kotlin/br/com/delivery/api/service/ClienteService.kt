@@ -33,7 +33,7 @@ class ClienteService(
     fun atualizar(userId: Long, form: ClienteFormAtualiza) = buscar(userId)
         .atualiza(form
             .apply {
-                senha?.apply { senha  = encoder.encode(senha) }
+                senha?.apply { senha = encoder.encode(senha) }
             }
         )
 
@@ -44,16 +44,14 @@ class ClienteService(
 
     @Transactional
     fun deletar(userId: Long) {
-        buscar(userId)
-            .pedidos
-            .forEach { pedido ->
-                pedido.entrega?.let {
-                    if (it.status != EntregaStatus.NAO_INICIADA)
-                        throw EntregaEmAndamentoException()
+        val cliente = buscar(userId)
+            .takeUnless { cliente ->
+                cliente.pedidos.any { pedido ->
+                    pedido.entrega?.status != EntregaStatus.NAO_INICIADA
                 }
-            }
+            } ?: throw EntregaEmAndamentoException()
 
-        repository.deleteById(userId)
+        repository.delete(cliente)
     }
 
     override fun loadUserByUsername(username: String?): UserDetails = repository
