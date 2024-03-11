@@ -2,10 +2,13 @@ package br.com.delivery.api.service
 
 import br.com.delivery.api.domain.cliente.Cliente
 import br.com.delivery.api.domain.cliente.ClienteFormBuilder
-import br.com.delivery.api.domain.cliente.ClienteRepository
+import br.com.delivery.api.domain.entrega.EntregaFormNovo
 import br.com.delivery.api.domain.entrega.EntregaRepository
+import br.com.delivery.api.domain.entrega.EntregaStatus
+import br.com.delivery.api.domain.pedido.Pedido
 import br.com.delivery.api.domain.pedido.PedidoFormBuilder
 import br.com.delivery.api.domain.pedido.PedidoRepository
+import br.com.delivery.api.infra.exception.EntregaEmAndamentoException
 import br.com.delivery.api.infra.exception.PedidoNaoEncontradoException
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import kotlin.test.assertNotNull
 
 @ActiveProfiles("test")
 @Transactional
@@ -28,7 +32,6 @@ class PedidoServiceTestIntegration(
     @Autowired private val clienteService: ClienteService,
     @Autowired private val pedidoService: PedidoService,
     @Autowired private val entregaService: EntregaService,
-    @Autowired private val clienteRepository: ClienteRepository,
     @Autowired private val pedidoRepository: PedidoRepository,
     @Autowired private val entregaRepository: EntregaRepository,
 
@@ -48,9 +51,7 @@ class PedidoServiceTestIntegration(
     fun criar_1() {
         assertEquals(0, pedidoRepository.count())
 
-        val pedido = pedidoService.criar(cliente.id!!, pedidoFormNovo)
-        assertEquals(1, pedidoRepository.count())
-
+        val pedido = criaPedido()
         val pedidoBuscado = pedidoRepository.findAll().first()
 
         assertEquals(1L, pedidoRepository.count())
@@ -65,18 +66,18 @@ class PedidoServiceTestIntegration(
     fun atualizar_1() {
         assertEquals(0, pedidoRepository.count())
 
-        val pedido = pedidoService.criar(cliente.id!!, pedidoFormNovo)
+        val pedido = criaPedido()
         assertEquals(1, pedidoRepository.count())
 
-        val pedidoAtualizado = pedidoService.atualizar(cliente.id!!, pedido.id!!, pedidoFormAtualiza)
+        val pedidoAtualizado = atualizaPedido(pedido.id!!)
         val pedidoBuscado = pedidoRepository.findAll().first()
 
-        assertEquals(1L, clienteRepository.count())
         assertEquals(pedido, pedidoAtualizado)
         assertEquals(pedidoAtualizado, pedidoBuscado)
         assertEquals(pedidoFormAtualiza.descricao, pedido.descricao)
         assertEquals(cliente, pedido.cliente)
     }
+
 
     @Test
     @DisplayName(
@@ -88,7 +89,7 @@ class PedidoServiceTestIntegration(
     fun atualizar_2() {
         assertEquals(0, pedidoRepository.count())
 
-        val pedido = pedidoService.criar(cliente.id!!, pedidoFormNovo)
+        val pedido = criaPedido()
         assertEquals(1, pedidoRepository.count())
 
         assertThrows<PedidoNaoEncontradoException> {
@@ -105,109 +106,132 @@ class PedidoServiceTestIntegration(
         assertNull(pedido.entrega)
 
     }
-//
-//    @Test
-//    @DisplayName("Dado um clientId e um ClienteFormAtualiza com campos em nulo, Deve manter os dados originais")
-//    fun atualizar_2() {
-//        assertEquals(0, clienteRepository.count())
-//
-//        val cliente = clienteService.criar(clienteFormNovo)
-//        val clienteAtualizado = clienteService.atualizar(cliente.id!!, ClienteFormAtualiza(null, null, null))
-//
-//        val clienteBuscado = clienteRepository.findAll().first()
-//
-//        assertTrue(clienteRepository.count() == 1L)
-//        assertEquals(cliente, clienteAtualizado)
-//        assertEquals(clienteAtualizado, clienteBuscado)
-//        assertEquals(clienteFormNovo.nome, clienteBuscado.nome)
-//        assertEquals(clienteFormNovo.login, clienteBuscado.login)
-//        assertEquals(clienteFormNovo.senha, clienteBuscado.senha)
-//    }
-//
-//    @Test
-//    @DisplayName("Dado um clientId válido, Deve retornar o cliente")
-//    fun buscar_1() {
-//        assertEquals(0, clienteRepository.count())
-//
-//        val cliente = clienteService.criar(clienteFormNovo)
-//        val clienteBuscado = clienteService.buscar(cliente.id!!)
-//
-//        assertEquals(cliente, clienteBuscado)
-//    }
-//
-//    @Test
-//    @DisplayName("Dado um clientId inválido, Deve lançar exception")
-//    fun buscar_2() {
-//        assertEquals(0, clienteRepository.count())
-//
-//        clienteService.criar(clienteFormNovo)
-//
-//        org.junit.jupiter.api.assertThrows<ClienteNaoEncontradoException> { clienteService.buscar(-1L) }
-//    }
-//
-//    @Test
-//    @DisplayName("Dado um clientId válido sem entrega em andamento, Quando tentar deletar, Deve deletar o cliente")
-//    fun deletar_1() {
-//        assertEquals(0, clienteRepository.count())
-//
-//        val cliente = clienteService.criar(clienteFormNovo)
-//        assertEquals(1, clienteRepository.count())
-//
-//        clienteService.deletar(cliente.id!!)
-//        assertEquals(0, clienteRepository.count())
-//    }
-//
-//    @Test
-//    @DisplayName(
-//        """
-//        Dado um clientId válido com pedido e com entrega nao iniciada,
-//        Quando tentar deletar,
-//        Deve deletar cliente e dados de entrega e pedido relacionados"""
-//    )
-//    fun deletar_2() {
-//        assertEquals(0, clienteRepository.count())
-//        assertEquals(0, pedidoRepository.count())
-//        assertEquals(0, entregaRepository.count())
-//
-//        val cliente = clienteService.criar(clienteFormNovo)
-//        val pedido = pedidoService.criar(cliente.id!!, pedidoFormNovo)
-//        entregaService.criar(cliente.id!!, EntregaFormBuilder().formNovo(pedido.id!!))
-//
-//        assertEquals(1, clienteRepository.count())
-//        assertEquals(1, pedidoRepository.count())
-//        assertEquals(1, entregaRepository.count())
-//
-//        clienteService.deletar(cliente.id!!)
-//        assertEquals(0, clienteRepository.count())
-//        assertEquals(0, pedidoRepository.count())
-//        assertEquals(0, entregaRepository.count())
-//    }
-//
-//    @Test
-//    @DisplayName(
-//        """
-//        Dado um clientId válido com pedido e com entrega iniciada,
-//        Quando tentar deletar,
-//        Deve lançar exception informando da entrega"""
-//    )
-//    fun deletar_3() {
-//        assertEquals(0, clienteRepository.count())
-//        assertEquals(0, pedidoRepository.count())
-//        assertEquals(0, entregaRepository.count())
-//
-//        val cliente = clienteService.criar(clienteFormNovo)
-//        val pedido = pedidoService.criar(cliente.id!!, pedidoFormNovo)
-//        val entrega = entregaService.criar(cliente.id!!, EntregaFormBuilder().formNovo(pedido.id!!))
-//        entregaService.atualizar(cliente.id!!, entrega.id!!, EntregaFormBuilder().formAtualiza_EntregaIniciada())
-//
-//        assertEquals(1, clienteRepository.count())
-//        assertEquals(1, pedidoRepository.count())
-//        assertEquals(1, entregaRepository.count())
-//
-//        org.junit.jupiter.api.assertThrows<EntregaEmAndamentoException> { clienteService.deletar(cliente.id!!) }
-//
-//        assertEquals(1, clienteRepository.count())
-//        assertEquals(1, pedidoRepository.count())
-//        assertEquals(1, entregaRepository.count())
-//    }
+
+
+    @Test
+    @DisplayName("Dado um clienteId e pedidoId válidos, Deve retornar o pedido.")
+    fun buscar_1() {
+        assertEquals(0, pedidoRepository.count())
+
+        val pedido = criaPedido()
+        val pedidoBuscado = pedidoService.buscar(cliente.id!!, pedido.id!!)
+
+        assertEquals(pedido, pedidoBuscado)
+    }
+
+    @Test
+    @DisplayName("Dado um clienteId válido e um pedidoId inválido, Deve lançar exception de pedido não encontrado.")
+    fun buscar_2() {
+        assertEquals(0, pedidoRepository.count())
+
+        criaPedido()
+
+        assertThrows<PedidoNaoEncontradoException> { pedidoService.buscar(cliente.id!!, -1L) }
+    }
+
+    @Test
+    @DisplayName(
+        """
+        Dado um clientId sem relação com pedidoId,
+        Quando solicitado dados do pedido,
+        Deve lançar exception de pedido não encontrado."""
+    )
+    fun buscar_3() {
+        assertEquals(0, pedidoRepository.count())
+
+        val pedido = criaPedido()
+
+        assertThrows<PedidoNaoEncontradoException> { pedidoService.buscar(-1L, pedido.id!!) }
+    }
+
+    @Test
+    @DisplayName(
+        """
+        Dado um clientId e pedidoId válidos e sem entrega,
+        Quando tentar deletar o pedido,
+        Deve deletar o pedido"""
+    )
+    fun deletar_1() {
+        assertEquals(0, pedidoRepository.count())
+
+        val pedido = criaPedido()
+        assertEquals(1, pedidoRepository.count())
+        assertNull(pedido.entrega)
+        pedidoService.deletar(cliente.id!!, pedido.id!!)
+        assertEquals(0, pedidoRepository.count())
+    }
+
+    @Test
+    @DisplayName(
+        """
+        Dado um clientId sem direitos sobre o pedidoId válido e sem entrega,
+        Quando tentar deletar o pedido,
+        Deve lançar exception de pedido não encontrado"""
+    )
+    fun deletar_2() {
+        assertEquals(0, pedidoRepository.count())
+
+        val pedido = criaPedido()
+        assertEquals(1, pedidoRepository.count())
+        assertThrows<PedidoNaoEncontradoException> { pedidoService.deletar(-1L, pedido.id!!) }
+
+        assertEquals(1, pedidoRepository.count())
+    }
+
+    @Test
+    @DisplayName(
+        """
+        Dado um clientId e pedidoId válido e com entrega mas ainda não iniciada,
+        Quando tentar deletar o pedido,
+        Deve deletar o pedido E deletar a entrega"""
+    )
+    fun deletar_3() {
+        assertEquals(0, pedidoRepository.count())
+
+        val pedido = criaPedido()
+        criaEntrega(pedido)
+        assertNotNull(pedido.entrega)
+        assertEquals(EntregaStatus.NAO_INICIADA, pedido.entrega?.status)
+        assertEquals(1, pedidoRepository.count())
+        assertEquals(1, entregaRepository.count())
+
+        pedidoService.deletar(cliente.id!!, pedido.id!!)
+
+        assertEquals(0, pedidoRepository.count())
+        assertEquals(0, entregaRepository.count())
+    }
+
+    @Test
+    @DisplayName(
+        """
+        Dado um clientId e pedidoId válido e com entrega já iniciada,
+        Quando tentar deletar o pedido,
+        Deve lançar exception informando da entrega em andamento"""
+    )
+    fun deletar_4() {
+        assertEquals(0, pedidoRepository.count())
+
+        val pedido = criaPedido()
+        val entrega = criaEntrega(pedido)
+        entrega.status = EntregaStatus.PREPARANDO
+
+        assertEquals(1, pedidoRepository.count())
+        assertEquals(1, entregaRepository.count())
+        assertNotNull(pedido.entrega)
+        assertEquals(EntregaStatus.PREPARANDO, pedido.entrega?.status)
+
+        assertThrows<EntregaEmAndamentoException> { pedidoService.deletar(cliente.id!!, pedido.id!!) }
+
+        assertEquals(1, pedidoRepository.count())
+        assertEquals(1, entregaRepository.count())
+    }
+
+    private fun criaPedido() = pedidoService.criar(cliente.id!!, pedidoFormNovo)
+
+    private fun atualizaPedido(pedidoId: Long) =
+        pedidoService.atualizar(cliente.id!!, pedidoId, pedidoFormAtualiza)
+
+    private fun criaEntrega(pedido: Pedido) =
+        entregaService.criar(cliente.id!!, EntregaFormNovo(pedido.id!!, "endereço da entrega"))
+
 }
