@@ -1,0 +1,35 @@
+services:
+  database:
+    container_name: DB_Delivery
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    networks:
+      - compose-bridge
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: db_delivery
+
+  api:
+    container_name: API_Delivery
+    image: delivery-api
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    depends_on:
+      - database
+    networks:
+      - compose-bridge
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_DATABASE: db_delivery
+      DB_USER: postgres
+      DB_PASSWORD: root
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+
+networks:
+  compose-bridge:
+    driver: bridge
