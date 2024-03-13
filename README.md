@@ -5,7 +5,9 @@
 
 # Controle de Delivery de Restaurante
 API simplificada para controle de delivery de um restaurante.
+
 Este projeto, originalmente desenvolvido por mim em Java, era parte de um processo seletivo para BackEnd.
+
 Resolvi refazer em Kotlin alterando um pouco a stack  e incrementando algumas funcionalidades como parte de meus estudos.
 
 ## Stack
