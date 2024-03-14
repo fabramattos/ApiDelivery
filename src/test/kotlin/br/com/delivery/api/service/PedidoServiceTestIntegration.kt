@@ -8,26 +8,18 @@ import br.com.delivery.api.domain.entrega.EntregaStatus
 import br.com.delivery.api.domain.pedido.Pedido
 import br.com.delivery.api.domain.pedido.PedidoFormBuilder
 import br.com.delivery.api.domain.pedido.PedidoRepository
+import br.com.delivery.api.infra.database.DatabaseContainerConfig
 import br.com.delivery.api.infra.exception.EntregaEmAndamentoException
 import br.com.delivery.api.infra.exception.PedidoNaoEncontradoException
-import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import kotlin.test.assertNotNull
 
-@ActiveProfiles("test")
-@Transactional
-@ExtendWith(SpringExtension::class)
-@SpringBootTest
 class PedidoServiceTestIntegration(
     @Autowired private val clienteService: ClienteService,
     @Autowired private val pedidoService: PedidoService,
@@ -35,7 +27,7 @@ class PedidoServiceTestIntegration(
     @Autowired private val pedidoRepository: PedidoRepository,
     @Autowired private val entregaRepository: EntregaRepository,
 
-    ) {
+    ) : DatabaseContainerConfig() {
 
     private lateinit var cliente: Cliente
     private final val pedidoFormNovo = PedidoFormBuilder().formNovo()

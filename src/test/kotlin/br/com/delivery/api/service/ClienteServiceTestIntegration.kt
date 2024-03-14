@@ -7,24 +7,16 @@ import br.com.delivery.api.domain.entrega.EntregaFormBuilder
 import br.com.delivery.api.domain.entrega.EntregaRepository
 import br.com.delivery.api.domain.pedido.PedidoFormBuilder
 import br.com.delivery.api.domain.pedido.PedidoRepository
+import br.com.delivery.api.infra.database.DatabaseContainerConfig
 import br.com.delivery.api.infra.exception.ClienteNaoEncontradoException
 import br.com.delivery.api.infra.exception.EntregaEmAndamentoException
-import jakarta.transaction.Transactional
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import kotlin.test.assertEquals
 
 
-@ActiveProfiles("test")
-@ExtendWith(SpringExtension::class)
-@Transactional
-@SpringBootTest
 class ClienteServiceTestIntegration(
     @Autowired private val clienteService: ClienteService,
     @Autowired private val pedidoService: PedidoService,
@@ -32,8 +24,7 @@ class ClienteServiceTestIntegration(
     @Autowired private val clienteRepository: ClienteRepository,
     @Autowired private val pedidoRepository: PedidoRepository,
     @Autowired private val entregaRepository: EntregaRepository,
-
-    ) {
+    ) : DatabaseContainerConfig(){
 
     private val clienteFormNovo = ClienteFormBuilder().formNovo()
     private val clienteFormAtualiza = ClienteFormBuilder().formAtualizado()

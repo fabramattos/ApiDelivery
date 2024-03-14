@@ -23,7 +23,6 @@ dependencies {
     //Database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
-    runtimeOnly("com.h2database:h2") // para inicio de projeto
 
     //Web
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -54,6 +53,7 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+//    maxParallelForks = 1
 }
 
 tasks.withType<KotlinCompile> {

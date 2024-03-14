@@ -1,7 +1,5 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testDB
-    driver-class-name: org.h2.Driver
     init: false #variavel criada para controle de iniciaização do DB dependendo do cenario (test, prod, dev...)
   jpa:
     hibernate:
