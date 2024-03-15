@@ -20,6 +20,9 @@ jobs:
         with:
           java-version: 19
           distribution: 'temurin'
+      
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
 
       - name: Gradle Clean
         run: ./gradlew clean
