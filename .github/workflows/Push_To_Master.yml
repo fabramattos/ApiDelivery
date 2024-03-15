@@ -1,0 +1,27 @@
+# Para push direto na master (segurança 'rules' desabilitada)
+
+name: 'Push Master: Build, Test'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 19
+
+      - name: Gradle Clean
+        run: ./gradlew clean
+
+      - name: Gradle Build e Testes
+        run: ./gradlew build
