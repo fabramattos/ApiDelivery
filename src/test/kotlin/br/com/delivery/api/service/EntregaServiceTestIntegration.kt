@@ -52,7 +52,7 @@ class EntregaServiceTestIntegration(
         Deve criar uma nova Entrega e associa-la ao pedido/cliente."""
     )
     fun criar_1() {
-        assertEquals(1, entregaRepository.count())
+        assertEquals(0, entregaRepository.count())
 
         val entrega = criaEntrega(pedido.id!!)
         val entregaBuscada = entregaRepository.findAll().first()
