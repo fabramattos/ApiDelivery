@@ -48,6 +48,9 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
+    //Doc
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0")
+
 
 }
 

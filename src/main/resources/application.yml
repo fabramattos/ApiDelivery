@@ -14,3 +14,7 @@ spring:
 
 jwt:
   secret: 123456
+
+springdoc:
+  swagger-ui:
+    defaultModelsExpandDepth: -1
