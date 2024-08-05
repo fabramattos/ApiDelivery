@@ -1,4 +1,4 @@
-*Mude o idioma:* [![pt-br](https://img.shields.io/badge/lang-pt--br-green.svg)](https://github.com/fabramattos/ApiDelivery/blob/main/README_pt-BR.md)
+*Mude o idioma:* [![pt-br](https://img.shields.io/badge/lang-pt--br-green.svg)](https://github.com/fabramattos/ApiDelivery/blob/main/README_pt-BR.md)<br>
 🚧 WORK IN PROGRESS 🚧
 
 # Restaurant Delivery Control
