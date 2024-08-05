@@ -1,3 +1,6 @@
+*Change language:* [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/fabramattos/ApiDelivery)<br>
+<br>
+
 🚧 PROJETO EM DESENVOLVIMENTO 🚧
 
 # Controle de Delivery de Restaurante
